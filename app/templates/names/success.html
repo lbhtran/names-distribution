@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>{{ _('File Upload Success') }}</h1>
+    <p>
+        <a href="{{ url_for('names.upload_csv') }}">{{ _('Back') }}</a>
+        <a href="{{ url_for('names.view_list') }}">{{ _('View List') }}</a>
+    </p>
+{% endblock %}

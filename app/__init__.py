@@ -47,6 +47,9 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from app.names import bp as names_bp
+    app.register_blueprint(names_bp)
+
     from app import models
 
     if not app.debug:

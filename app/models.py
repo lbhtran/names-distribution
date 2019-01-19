@@ -4,7 +4,6 @@ from time import time
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.search import add_to_index, remove_from_index, query_index
 import jwt
 from app import db, login
 
@@ -66,6 +65,16 @@ class User(UserMixin, db.Model):
             return
         return User.query.get(id)
 
+class RefugeeList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    identity = db.Column(db.String(100), index=True)
+    origin = db.Column(db.String(50))
+    found_dead = db.Column(db.Integer)
+    cause_of_dead = db.Column(db.String(280))
+    source = db.Column(db.String(50))
+
+    def __repr__(self):
+        return '<Refugee {}>'.format(self.identity)
 
 @login.user_loader
 def load_user(id):
