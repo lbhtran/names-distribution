@@ -7,9 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from app import db, login
 
-followers = db.Table('followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
+names_assignment = db.Table('names_assignment',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('name_id', db.Integer, db.ForeignKey('refugee.id'))
 )
 
 class User(UserMixin, db.Model):
@@ -19,11 +19,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    followed = db.relationship(
-        'User', secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -39,18 +34,6 @@ class User(UserMixin, db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
             digest, size)
 
-    def follow(self, user):
-        if not self.is_following(user):
-            self.followed.append(user)
-
-    def unfollow(self, user):
-        if self.is_following(user):
-            self.followed.remove(user)
-
-    def is_following(self, user):
-        return self.followed.filter(
-            followers.c.followed_id == user.id).count() > 0
-
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
@@ -65,16 +48,28 @@ class User(UserMixin, db.Model):
             return
         return User.query.get(id)
 
-class RefugeeList(db.Model):
+class Refugee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     identity = db.Column(db.String(100), index=True)
     origin = db.Column(db.String(50))
-    found_dead = db.Column(db.Integer)
-    cause_of_dead = db.Column(db.String(280))
+    found = db.Column(db.Integer)
+    cause_of_death = db.Column(db.String(280))
     source = db.Column(db.String(50))
+    names_assigned = db.relationship(
+        'User', secondary=names_assignment,
+        backref=db.backref('names_assignments', lazy='dynamic'))
 
     def __repr__(self):
         return '<Refugee {}>'.format(self.identity)
+
+
+    def assign_name(self, user):
+        if not self.is_assigned(user):
+            self.names_assigned.append(user)
+
+    def is_assigned(self, user):
+        return self.names_assigned.filter(
+            names_assignment.user_id == user.id).count() > 0
 
 @login.user_loader
 def load_user(id):

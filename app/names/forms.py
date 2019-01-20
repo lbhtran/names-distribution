@@ -8,3 +8,6 @@ from app.models import User
 class UploadCSVForm(FlaskForm):
     fileName = FileField()
     submit = SubmitField(_l('Upload'))
+
+class GetNames(FlaskForm):
+    submit = SubmitField(_('Get A Name'))
