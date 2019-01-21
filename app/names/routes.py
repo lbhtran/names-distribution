@@ -32,7 +32,7 @@ def upload_csv():
             csv_reader = csv.reader(codecs.iterdecode(csv_file, 'utf-8', errors='ignore'), delimiter=',')
             next(csv_reader, None) # ignore header
             for row in csv_reader:
-                refugee = Refugee(identity=row[5], origin=row[6], found_dead=row[3], cause_of_dead=row[7], source=row[8])
+                refugee = Refugee(identity=row[5], origin=row[6], found=row[3], cause_of_death=row[7], source=row[8])
                 db.session.add(refugee)
                 db.session.commit()
             return redirect(url_for('names.success'))
@@ -43,10 +43,10 @@ def upload_csv():
 @login_required
 def get_names():
     form = GetNames()
-    name = Refugee.query.first()
+    name = Refugee.query.first() #need to be randomised
     user = current_user
     if form.is_submitted():
-        name.assign_name(user)
+        name.names_assignments.append(user)
         db.session.commit()
         flash(_('The name is %(name)s', name=name.identity))
         return redirect(url_for('names.get_names'))

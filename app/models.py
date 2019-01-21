@@ -19,6 +19,9 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    names_assigned = db.relationship(
+        'Refugee', secondary=names_assignment,
+        backref=db.backref('names_assignments', lazy='dynamic'))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -55,21 +58,17 @@ class Refugee(db.Model):
     found = db.Column(db.Integer)
     cause_of_death = db.Column(db.String(280))
     source = db.Column(db.String(50))
-    names_assigned = db.relationship(
-        'User', secondary=names_assignment,
-        backref=db.backref('names_assignments', lazy='dynamic'))
 
     def __repr__(self):
         return '<Refugee {}>'.format(self.identity)
 
-
     def assign_name(self, user):
         if not self.is_assigned(user):
-            self.names_assigned.append(user)
+            self.names_assignments.append(user)
 
     def is_assigned(self, user):
-        return self.names_assigned.filter(
-            names_assignment.user_id == user.id).count() > 0
+        return self.names_assignments.filter(
+            names_assignment.id == user.id).count() > 0
 
 @login.user_loader
 def load_user(id):
