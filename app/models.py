@@ -68,7 +68,7 @@ class Refugee(db.Model):
 
     def is_assigned(self, user):
         return self.names_assignments.filter(
-            names_assignment.id == user.id).count() > 0
+            names_assignment.user_id == user.id).count() > 0
 
 @login.user_loader
 def load_user(id):
