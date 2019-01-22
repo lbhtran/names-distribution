@@ -1,4 +1,4 @@
-import csv, codecs
+import csv, codecs,random
 from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import login_required, current_user
 from flask_babel import _, lazy_gettext as _l
@@ -43,12 +43,12 @@ def upload_csv():
 @login_required
 def get_names():
     form = GetNames()
-    name = Refugee.query.first() #need to be randomised
-    user = current_user
+    random_id = random.randint(1, Refugee.query.count())
+    name = Refugee.query.filter_by(id=random_id).first()  # need to be randomised
     if form.is_submitted():
-        name.names_assignments.append(user)
+        name.assign_name(current_user)
         db.session.commit()
         flash(_('The name is %(name)s', name=name.identity))
-        return redirect(url_for('names.get_names'))
+        return redirect(url_for('names.get_names', form=form))
 
     return render_template('names/get_names.html', title='Get Names', form=form, name=name)
