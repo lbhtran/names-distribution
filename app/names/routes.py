@@ -45,10 +45,10 @@ def get_names():
     form = GetNames()
     random_id = random.randint(1, Refugee.query.count())
     name = Refugee.query.filter_by(id=random_id).first()  # need to be randomised
+    submitted = False
     if form.is_submitted():
+        submitted = True
         name.assign_name(current_user)
         db.session.commit()
-        flash(_('The name is %(name)s', name=name.identity))
-        return redirect(url_for('names.get_names', form=form))
 
-    return render_template('names/get_names.html', title='Get Names', form=form, name=name)
+    return render_template('names/get_names.html', title='Get Names', form=form, name=name, submitted=submitted)

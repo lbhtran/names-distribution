@@ -3,15 +3,19 @@
 
 {% block app_content %}
     <h1>{{ _('Get Names')}}</h1>
-    {% if submitted %}
-        <h3>The name is {{ name.identity }}</h3>
-        <p>Found in {{ name.found }}</p>
-        <p>Origin: {{ name.origin }}</p>
-        <p>Cause of death: {{ name.cause_of_death }}</p>
-    {% endif %}
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
         </div>
     </div>
+
+{% if submitted %}
+    <div class="text-justify">
+    <h3>The name is {{ name.identity }}</h3>
+    <p>Found in {{ name.found }}</p>
+    <p>Origin: {{ name.origin }}</p>
+    <p>Cause of death: {{ name.cause_of_death }}</p>
+    </div>
+{% endif %}
+
 {% endblock %}

@@ -21,7 +21,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     names_assigned = db.relationship(
         'Refugee', secondary=names_assignment,
-        backref=db.backref('names_assignments', lazy='dynamic'))
+        backref=db.backref('names_assignment', lazy='dynamic'))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -63,12 +63,12 @@ class Refugee(db.Model):
         return '<Refugee {}>'.format(self.identity)
 
     def assign_name(self, user):
-        if not self.is_assigned(user):
-            self.names_assignments.append(user)
+        if not self.is_assigned():
+            self.names_assignment.append(user)
 
-    def is_assigned(self, user):
-        return self.names_assignments.filter(
-            names_assignment.user_id == user.id).count() > 0
+    def is_assigned(self):
+        return self.names_assignment.filter(
+            names_assignment.c.name_id == self.id).count() > 0
 
 @login.user_loader
 def load_user(id):
