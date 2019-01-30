@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from flask_babel import _, get_locale
 from app import db
 from app.main.forms import EditProfileForm
-from app.models import User
+from app.models import User, Refugee
 from app.main import bp
 
 @bp.before_app_request
@@ -24,7 +24,8 @@ def index():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    names = user.get_assigned_list()
+    return render_template('user.html', user=user, names=names)
 
 @bp.route('/user/<username>/popup')
 @login_required

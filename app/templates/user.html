@@ -17,4 +17,33 @@
         </tr>
     </table>
 
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Identity</th>
+            <th scope="col">Origin</th>
+            <th scope="col">Found</th>
+            <th scope="col">Cause of Death</th>
+        </tr>
+        {% for name in names %}
+        <tr>
+            <td>
+                {{ name.id }}
+            </td>
+            <td>
+                {{ name.identity }}
+            </td>
+            <td>
+                {{ name.origin }}
+            </td>
+            <td>
+                {{ name.found }}
+            </td>
+            <td>
+                {{ name.cause_of_death }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
 {% endblock %}

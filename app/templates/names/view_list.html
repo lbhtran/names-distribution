@@ -10,25 +10,24 @@
             <th scope="col">Found</th>
             <th scope="col">Cause of Death</th>
         </tr>
-        {% set count = namespace(a=1) %}
         {% for name in names %}
-            <tr>
-                <td>
-                    {{ name.id }}
-                </td>
-                <td>
-                    {{ name.identity }}
-                </td>
-                <td>
-                    {{ name.origin }}
-                </td>
-                <td>
-                    {{ name.found }}
-                </td>
-                <td>
-                    {{ name.cause_of_death }}
-                </td>
-            </tr>
+        <tr>
+            <td>
+                {{ name.id }}
+            </td>
+            <td>
+                {{ name.identity }}
+            </td>
+            <td>
+                {{ name.origin }}
+            </td>
+            <td>
+                {{ name.found }}
+            </td>
+            <td>
+                {{ name.cause_of_death }}
+            </td>
+        </tr>
         {% endfor %}
-</table>
+    </table>
 {% endblock %}
