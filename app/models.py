@@ -54,8 +54,8 @@ class User(UserMixin, db.Model):
     def get_assigned_list(self):
         return Refugee.query.join(
             names_assignment, (names_assignment.c.name_id == Refugee.id)).filter(
-            names_assignment.c.user_id == self.id).order_by(
-            Refugee.id.asc())
+                names_assignment.c.user_id == self.id).order_by(
+                    Refugee.id.asc())
 
 class Refugee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,9 +75,6 @@ class Refugee(db.Model):
     def is_assigned(self):
         return self.names_assignment.filter(
             names_assignment.c.name_id == self.id).count() > 0
-
-    def get_assigned_list(self, user):
-        return self.names_assignment.filter(names_assignment.c.user_id == user.id).all()
 
 @login.user_loader
 def load_user(id):
