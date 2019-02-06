@@ -32,35 +32,3 @@ def user(username):
 def user_popup(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user_popup.html', user=user)
-
-
-@bp.route('/follow/<username>')
-@login_required
-def follow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash(_('User %(username)s not found.', username=username))
-        return redirect(url_for('main.index'))
-    if user == current_user:
-        flash(_('You cannot follow yourself!'))
-        return redirect(url_for('main.user', username=username))
-    current_user.follow(user)
-    db.session.commit()
-    flash(_('You are following %(username)s!', username=username))
-    return redirect(url_for('main.user', username=username))
-
-
-@bp.route('/unfollow/<username>')
-@login_required
-def unfollow(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        flash(_('User %(username)s not found.', username=username))
-        return redirect(url_for('main.index'))
-    if user == current_user:
-        flash(_('You cannot unfollow yourself!'))
-        return redirect(url_for('main.user', username=username))
-    current_user.unfollow(user)
-    db.session.commit()
-    flash(_('You are not following %(username)s.', username=username))
-    return redirect(url_for('main.user', username=username))
