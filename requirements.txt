@@ -28,7 +28,7 @@ python-editor==1.0.3
 pytz==2018.9
 requests==2.33.0
 six==1.12.0
-SQLAlchemy==1.2.16
+SQLAlchemy==1.3.0b3
 urllib3==2.7.0
 visitor==0.1.3
 Werkzeug==0.14.1
